@@ -37,7 +37,7 @@ export default function App() {
         return setInputValue(match[1]);
       }
       return alert("Invalid Link or Empty Input");
-    }, 1300);
+    }, 1000);
     setIsLoading(true);
   }
 
@@ -45,7 +45,7 @@ export default function App() {
     setTimeout(() => {
       setIsCopied(true);
       setIsLoading(false);
-    }, 1000);
+    }, 700);
     setIsLoading(true);
   }
 
