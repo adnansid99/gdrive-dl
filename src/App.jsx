@@ -13,7 +13,9 @@ export default function App() {
   const [isConverted, setIsConverted] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const finalUrlInit = `https://www.googleapis.com/drive/v3/files/${inputValue}?alt=media&key=AIzaSyA6PVS3rL3U9osE-Acsuos8EIe05_aCsVo`;
+  const finalUrlInit = `https://www.googleapis.com/drive/v3/files/${inputValue}?alt=media&key=${
+    import.meta.env.VITE_GDRIVE_API
+  }`;
 
   function convertLink() {
     setTimeout(() => {
