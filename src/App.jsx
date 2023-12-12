@@ -23,11 +23,14 @@ export default function App() {
       const regexFileId = /\/file\/d\/([\w-]+)\//;
       const regexOpenId = /\/open\?id=([\w-]+)/;
       const regexDownloadId = /\/uc\?export=download&id=([\w-]+)/;
+      const regexDownloadId2 = /\/uc\?id=([\w-]+)/;
+
       const url = inputValue;
       let match =
         url.match(regexFileId) ||
         url.match(regexOpenId) ||
-        url.match(regexDownloadId);
+        url.match(regexDownloadId) ||
+        url.match(regexDownloadId2);
 
       if (match) {
         setIsConverted(true);
