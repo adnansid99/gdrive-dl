@@ -20,7 +20,7 @@ export default function App() {
   function convertLink() {
     setTimeout(() => {
       setIsLoading(false);
-      const regexFileId = /\/file\/d\/([\w-]+)\//;
+      const regexFileId = /\/file\/d\/([\w-]+)/;
       const regexOpenId = /\/open\?id=([\w-]+)/;
       const regexDownloadId = /\/uc\?export=download&id=([\w-]+)/;
       const regexDownloadId2 = /\/uc\?id=([\w-]+)/;
