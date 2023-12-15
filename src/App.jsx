@@ -7,21 +7,26 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import axios from "axios";
+
+const { VITE_GDRIVE_API } = import.meta.env;
+const headingData = {
+  title: "GDrive Download Link Generator",
+  fileType: "",
+};
 
 export default function App() {
+  const [heading, setHeading] = useState(headingData);
   const [inputValue, setInputValue] = useState("");
   const [isConverted, setIsConverted] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const finalUrlInit = `https://www.googleapis.com/drive/v3/files/${inputValue}?alt=media&key=${
-    import.meta.env.VITE_GDRIVE_API
-  }`;
+  const finalUrlInit = `https://www.googleapis.com/drive/v3/files/${inputValue}?alt=media&key=${VITE_GDRIVE_API}`;
 
   function convertLink() {
-    setTimeout(() => {
-      setIsLoading(false);
-      const regexFileId = /\/file\/d\/([\w-]+)/;
-      const regexFileId2 = /\/file\/d\/([\w-]+)\//;
+    setTimeout(async () => {
+      const regexFileId = /\/file\/d\/([\w-]+)\//;
+      const regexFileId2 = /\/file\/d\/([\w-]+)/;
       const regexOpenId = /\/open\?id=([\w-]+)/;
       const regexDownloadId = /\/uc\?export=download&id=([\w-]+)/;
       const regexDownloadId2 = /\/uc\?id=([\w-]+)/;
@@ -35,12 +40,35 @@ export default function App() {
         url.match(regexDownloadId2);
 
       if (match) {
+        // console.log(match);
+        await getFileName(match[1]);
+        setInputValue(match[1]);
+        setIsLoading(false);
         setIsConverted(true);
-        return setInputValue(match[1]);
+        return null;
       }
+      setIsLoading(false);
       return alert("Invalid Link or Empty Input");
     }, 1000);
     setIsLoading(true);
+  }
+
+  async function getFileName(fileId) {
+    await axios
+      .get(
+        `https://www.googleapis.com/drive/v3/files/${fileId}?key=${VITE_GDRIVE_API}`,
+      )
+      .then((response) => {
+        const { name, mimeType } = response.data;
+        setHeading((preValue) => {
+          return {
+            ...preValue,
+            title: name.substring(0, name.lastIndexOf(".")),
+            fileType: mimeType.split("/")[0],
+          };
+        });
+      })
+      .catch((error) => alert(error));
   }
 
   function copyLink() {
@@ -61,14 +89,29 @@ export default function App() {
         gap: 6,
       }}
     >
-      <Typography
-        onClick={() => window.location.reload()}
-        sx={{ cursor: "pointer" }}
-        className="heading"
-        variant="h4"
-      >
-        GDrive Download Link Generator
-      </Typography>
+      <Box sx={{ textAlign: "center" }}>
+        <Typography
+          onClick={() => window.location.reload()}
+          sx={{ cursor: "pointer" }}
+          className="heading"
+          variant="h4"
+        >
+          {heading.title}
+        </Typography>
+        {isConverted && (
+          <Typography
+            variant="body1"
+            sx={{
+              margin: "1rem 0 -1.2rem 0",
+              color: "#525252",
+              fontWeight: 600,
+              fontSize: "0.9rem",
+            }}
+          >
+            📁File Type: {heading.fileType}
+          </Typography>
+        )}
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -104,7 +147,13 @@ export default function App() {
               ) : (
                 <CopyToClipboard text={finalUrlInit} onCopy={copyLink}>
                   <Button
-                    sx={{ backgroundColor: "#009159", fontWeight: "bold" }}
+                    sx={{
+                      backgroundColor: "#009159",
+                      ":hover": {
+                        backgroundColor: "#007c4d",
+                      },
+                      fontWeight: "bold",
+                    }}
                     variant="contained"
                   >
                     {isCopied ? "Copied" : "Copy"}

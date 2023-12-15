@@ -6,7 +6,7 @@
 
 html {
   background-color: #1f1f1f;
-  /* background-color: #848484; */
+  /* background-color: #007c4d; */
 }
 
 #root {
@@ -25,6 +25,13 @@ html {
   width: 2.28rem !important;
   height: 2.28rem !important;
   margin: 0 1.61rem;
+}
+
+button {
+  transition: all 0.3s !important;
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 @media screen and (max-width: 768px) {
