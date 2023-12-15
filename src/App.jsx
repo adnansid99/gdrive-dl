@@ -21,6 +21,7 @@ export default function App() {
     setTimeout(() => {
       setIsLoading(false);
       const regexFileId = /\/file\/d\/([\w-]+)/;
+      const regexFileId2 = /\/file\/d\/([\w-]+)\//;
       const regexOpenId = /\/open\?id=([\w-]+)/;
       const regexDownloadId = /\/uc\?export=download&id=([\w-]+)/;
       const regexDownloadId2 = /\/uc\?id=([\w-]+)/;
@@ -28,6 +29,7 @@ export default function App() {
       const url = inputValue;
       let match =
         url.match(regexFileId) ||
+        url.match(regexFileId2) ||
         url.match(regexOpenId) ||
         url.match(regexDownloadId) ||
         url.match(regexDownloadId2);
